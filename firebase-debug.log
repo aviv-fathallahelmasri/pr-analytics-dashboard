@@ -1,0 +1,210 @@
+[debug] [2025-07-15T11:55:50.226Z] ----------------------------------------------------------------------
+[debug] [2025-07-15T11:55:50.228Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init hosting
+[debug] [2025-07-15T11:55:50.229Z] CLI Version:   14.10.1
+[debug] [2025-07-15T11:55:50.229Z] Platform:      win32
+[debug] [2025-07-15T11:55:50.229Z] Node Version:  v22.17.0
+[debug] [2025-07-15T11:55:50.229Z] Time:          Tue Jul 15 2025 13:55:50 GMT+0200 (Central European Summer Time)
+[debug] [2025-07-15T11:55:50.229Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-15T11:55:50.232Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-15T11:55:50.233Z] > authorizing via signed-in user (fathallah.elmasri@aviv-group.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\FElmasri\Desktop\github-pr-analytics\deployment
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project. 
+[debug] [2025-07-15T11:56:52.528Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T11:56:52.528Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T11:56:52.531Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1/projects:checkProjectId [none]
+[debug] [2025-07-15T11:56:52.532Z] >>> [apiv2][body] POST https://firebase.googleapis.com/v1/projects:checkProjectId {"proposedId":"pr_analytics_dashboard"}
+[debug] [2025-07-15T11:56:53.040Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1/projects:checkProjectId 400
+[debug] [2025-07-15T11:56:53.040Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1/projects:checkProjectId {"error":{"code":400,"message":"Request contains an invalid argument.","status":"INVALID_ARGUMENT"}}
+[debug] [2025-07-15T11:56:53.041Z] Couldn't check if project ID pr_analytics_dashboard is available. Original error: FirebaseError: Failed to check if project ID is available. See firebase-debug.log for more info.
+[debug] [2025-07-15T11:57:18.216Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T11:57:18.216Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T11:57:18.216Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2025-07-15T11:57:18.216Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"pr_analytics_dashboard","name":"pr_analytics_dashboard"}
+[debug] [2025-07-15T11:57:18.908Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 400
+[debug] [2025-07-15T11:57:18.908Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"error":{"code":400,"message":"Request contains an invalid argument.","status":"INVALID_ARGUMENT","details":[{"@type":"type.googleapis.com/google.rpc.BadRequest","fieldViolations":[{"field":"project_id","description":"project_id contains invalid characters"},{"field":"display_name","description":"project display name contains invalid characters"}]},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"url":"https://cloud.google.com/resource-manager/reference/rest/v1/projects"}]}]}}
+[debug] [2025-07-15T11:57:19.212Z] FirebaseError: Request to https://cloudresourcemanager.googleapis.com/v1/projects had HTTP Error: 400, Request contains an invalid argument.
+    at responseToError (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:52:12)
+    at RetryOperation._fn (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to create project. See firebase-debug.log for more info.
+[debug] [2025-07-15T11:58:03.132Z] ----------------------------------------------------------------------
+[debug] [2025-07-15T11:58:03.134Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init hosting
+[debug] [2025-07-15T11:58:03.134Z] CLI Version:   14.10.1
+[debug] [2025-07-15T11:58:03.134Z] Platform:      win32
+[debug] [2025-07-15T11:58:03.134Z] Node Version:  v22.17.0
+[debug] [2025-07-15T11:58:03.134Z] Time:          Tue Jul 15 2025 13:58:03 GMT+0200 (Central European Summer Time)
+[debug] [2025-07-15T11:58:03.134Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-15T11:58:03.138Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-15T11:58:03.138Z] > authorizing via signed-in user (fathallah.elmasri@aviv-group.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\FElmasri\Desktop\github-pr-analytics\deployment
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project. 
+[debug] [2025-07-15T11:58:40.240Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T11:58:40.241Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T11:58:40.244Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1/projects:checkProjectId [none]
+[debug] [2025-07-15T11:58:40.244Z] >>> [apiv2][body] POST https://firebase.googleapis.com/v1/projects:checkProjectId {"proposedId":"pr_analytics_dashboard_2025"}
+[debug] [2025-07-15T11:58:40.655Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1/projects:checkProjectId 400
+[debug] [2025-07-15T11:58:40.655Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1/projects:checkProjectId {"error":{"code":400,"message":"Request contains an invalid argument.","status":"INVALID_ARGUMENT"}}
+[debug] [2025-07-15T11:58:40.657Z] Couldn't check if project ID pr_analytics_dashboard_2025 is available. Original error: FirebaseError: Failed to check if project ID is available. See firebase-debug.log for more info.
+[debug] [2025-07-15T11:59:22.842Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T11:59:22.842Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T11:59:22.842Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2025-07-15T11:59:22.842Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"pr_analytics_dashboard_2025","name":"pr_analytics_dashboard_2025"}
+[debug] [2025-07-15T11:59:24.007Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 400
+[debug] [2025-07-15T11:59:24.007Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"error":{"code":400,"message":"Request contains an invalid argument.","status":"INVALID_ARGUMENT","details":[{"@type":"type.googleapis.com/google.rpc.BadRequest","fieldViolations":[{"field":"project_id","description":"project_id contains invalid characters"},{"field":"display_name","description":"project display name contains invalid characters"}]},{"@type":"type.googleapis.com/google.rpc.Help","links":[{"url":"https://cloud.google.com/resource-manager/reference/rest/v1/projects"}]}]}}
+[debug] [2025-07-15T11:59:24.206Z] FirebaseError: Request to https://cloudresourcemanager.googleapis.com/v1/projects had HTTP Error: 400, Request contains an invalid argument.
+    at responseToError (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\responseToError.js:52:12)
+    at RetryOperation._fn (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\apiv2.js:312:77)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+[error] 
+[error] Error: Failed to create project. See firebase-debug.log for more info.
+[debug] [2025-07-15T12:01:17.213Z] ----------------------------------------------------------------------
+[debug] [2025-07-15T12:01:17.215Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init hosting
+[debug] [2025-07-15T12:01:17.215Z] CLI Version:   14.10.1
+[debug] [2025-07-15T12:01:17.215Z] Platform:      win32
+[debug] [2025-07-15T12:01:17.215Z] Node Version:  v22.17.0
+[debug] [2025-07-15T12:01:17.215Z] Time:          Tue Jul 15 2025 14:01:17 GMT+0200 (Central European Summer Time)
+[debug] [2025-07-15T12:01:17.215Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-15T12:01:17.218Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-15T12:01:17.219Z] > authorizing via signed-in user (fathallah.elmasri@aviv-group.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\FElmasri\Desktop\github-pr-analytics\deployment
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project. 
+[debug] [2025-07-15T12:01:41.745Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:01:41.745Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:01:41.750Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1/projects:checkProjectId [none]
+[debug] [2025-07-15T12:01:41.751Z] >>> [apiv2][body] POST https://firebase.googleapis.com/v1/projects:checkProjectId {"proposedId":"pr-analytics-dashboard"}
+[debug] [2025-07-15T12:01:42.362Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1/projects:checkProjectId 200
+[debug] [2025-07-15T12:01:42.363Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1/projects:checkProjectId {"projectIdStatus":"PROJECT_ID_AVAILABLE","suggestedProjectId":"pr-analytics-dashboard"}
+[debug] [2025-07-15T12:01:43.675Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:01:43.675Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:01:43.675Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2025-07-15T12:01:43.675Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"pr-analytics-dashboard","name":"pr-analytics-dashboard"}
+[debug] [2025-07-15T12:01:44.293Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 200
+[debug] [2025-07-15T12:01:44.293Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"name":"operations/create_project.global.4984544450833107006"}
+[debug] [2025-07-15T12:01:44.295Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:01:44.295Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:01:44.296Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.4984544450833107006 [none]
+[debug] [2025-07-15T12:01:45.010Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.4984544450833107006 200
+[debug] [2025-07-15T12:01:45.010Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.4984544450833107006 {"name":"operations/create_project.global.4984544450833107006","metadata":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.ProjectCreationStatus","ready":true},"done":true,"error":{"code":7,"message":"No permission to create project in organization"}}
+[debug] [2025-07-15T12:01:45.341Z] FirebaseError: No permission to create project in organization
+    at OperationPoller.poll (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\operation-poller.js:24:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async createCloudProject (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\management\projects.js:215:29)
+    at async createFirebaseProjectAndLog (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\management\projects.js:83:9)
+    at async promptAndCreateNewProject (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\features\project.js:31:12)
+    at async Object.doSetup (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\features\project.js:85:31)
+    at async init (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\index.js:57:13)
+    at async Command.initAction [as actionFn] (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\commands\init.js:198:5)
+[error] 
+[error] Error: Failed to create project. See firebase-debug.log for more info.
+[debug] [2025-07-15T12:02:06.792Z] ----------------------------------------------------------------------
+[debug] [2025-07-15T12:02:06.793Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init hosting
+[debug] [2025-07-15T12:02:06.794Z] CLI Version:   14.10.1
+[debug] [2025-07-15T12:02:06.794Z] Platform:      win32
+[debug] [2025-07-15T12:02:06.794Z] Node Version:  v22.17.0
+[debug] [2025-07-15T12:02:06.794Z] Time:          Tue Jul 15 2025 14:02:06 GMT+0200 (Central European Summer Time)
+[debug] [2025-07-15T12:02:06.794Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-07-15T12:02:06.798Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-07-15T12:02:06.798Z] > authorizing via signed-in user (fathallah.elmasri@aviv-group.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\FElmasri\Desktop\github-pr-analytics\deployment
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[info] i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project. 
+[debug] [2025-07-15T12:02:23.330Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:02:23.330Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:02:23.335Z] >>> [apiv2][query] POST https://firebase.googleapis.com/v1/projects:checkProjectId [none]
+[debug] [2025-07-15T12:02:23.335Z] >>> [apiv2][body] POST https://firebase.googleapis.com/v1/projects:checkProjectId {"proposedId":"pranalyticsdashboard"}
+[debug] [2025-07-15T12:02:23.913Z] <<< [apiv2][status] POST https://firebase.googleapis.com/v1/projects:checkProjectId 200
+[debug] [2025-07-15T12:02:23.913Z] <<< [apiv2][body] POST https://firebase.googleapis.com/v1/projects:checkProjectId {"projectIdStatus":"PROJECT_ID_AVAILABLE","suggestedProjectId":"pranalyticsdashboard"}
+[debug] [2025-07-15T12:02:24.885Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:02:24.886Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:02:24.886Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects [none]
+[debug] [2025-07-15T12:02:24.886Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"projectId":"pranalyticsdashboard","name":"pranalyticsdashboard"}
+[debug] [2025-07-15T12:02:25.452Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects 200
+[debug] [2025-07-15T12:02:25.452Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects {"name":"operations/create_project.global.4793985583626260816"}
+[debug] [2025-07-15T12:02:25.453Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:02:25.453Z] Checked if tokens are valid: true, expires at: 1752584068355
+[debug] [2025-07-15T12:02:25.453Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.4793985583626260816 [none]
+[debug] [2025-07-15T12:02:26.158Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.4793985583626260816 200
+[debug] [2025-07-15T12:02:26.158Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/operations/create_project.global.4793985583626260816 {"name":"operations/create_project.global.4793985583626260816","metadata":{"@type":"type.googleapis.com/google.cloudresourcemanager.v1.ProjectCreationStatus","ready":true},"done":true,"error":{"code":7,"message":"No permission to create project in organization"}}
+[debug] [2025-07-15T12:02:26.349Z] FirebaseError: No permission to create project in organization
+    at OperationPoller.poll (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\operation-poller.js:24:19)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async createCloudProject (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\management\projects.js:215:29)
+    at async createFirebaseProjectAndLog (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\management\projects.js:83:9)
+    at async promptAndCreateNewProject (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\features\project.js:31:12)
+    at async Object.doSetup (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\features\project.js:85:31)
+    at async init (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\init\index.js:57:13)
+    at async Command.initAction [as actionFn] (C:\Users\FElmasri\AppData\Roaming\npm\node_modules\firebase-tools\lib\commands\init.js:198:5)
+[error] 
+[error] Error: Failed to create project. See firebase-debug.log for more info.
