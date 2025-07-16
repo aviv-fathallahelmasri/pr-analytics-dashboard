@@ -257,20 +257,22 @@
         
         .chart-container {
             background: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            height: 300px;
             position: relative;
+            min-height: 350px;
         }
         
         .chart-title {
             font-size: 1.3em;
             font-weight: 600;
             color: #333;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-align: center;
             position: relative;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
         }
 
         .chart-info-icon {
@@ -300,9 +302,38 @@
             background: #28a745;
             transform: scale(1.1);
         }
+
+        .chart-wrapper {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        .chart-wrapper canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .doughnut-wrapper {
+            position: relative;
+            height: 280px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .doughnut-wrapper canvas {
+            max-width: 280px !important;
+            max-height: 280px !important;
+        }
         
         .full-width {
             grid-column: 1 / -1;
+        }
+
+        .full-width .chart-wrapper {
+            height: 350px;
         }
         
         .data-table {
@@ -342,6 +373,24 @@
                 grid-template-columns: 1fr;
             }
             
+            .chart-container {
+                padding: 20px;
+                min-height: 300px;
+            }
+
+            .chart-wrapper {
+                height: 220px;
+            }
+
+            .doughnut-wrapper {
+                height: 220px;
+            }
+
+            .doughnut-wrapper canvas {
+                max-width: 220px !important;
+                max-height: 220px !important;
+            }
+            
             .tooltip {
                 max-width: 350px;
                 min-width: 300px;
@@ -351,7 +400,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>🚀 GitHub PR Analytics Dashboard</h1>
+        <h1>GitHub PR Analytics Dashboard</h1>
         <p>Advanced Pull Request Analytics & Team Impact Insights</p>
         <p id="lastUpdate">Loading data...</p>
     </div>
@@ -437,23 +486,31 @@
 
     <div class="charts-container">
         <div class="chart-container">
-            <div class="chart-title">📈 PR Activity Timeline</div>
-            <canvas id="timelineChart"></canvas>
+            <div class="chart-title">PR Activity Timeline</div>
+            <div class="chart-wrapper">
+                <canvas id="timelineChart"></canvas>
+            </div>
         </div>
         
         <div class="chart-container">
-            <div class="chart-title">📊 PR Status Distribution</div>
-            <canvas id="statusChart"></canvas>
+            <div class="chart-title">PR Status Distribution</div>
+            <div class="doughnut-wrapper">
+                <canvas id="statusChart"></canvas>
+            </div>
         </div>
         
         <div class="chart-container">
-            <div class="chart-title">👥 Top Authors</div>
-            <canvas id="authorsChart"></canvas>
+            <div class="chart-title">Top Authors</div>
+            <div class="chart-wrapper">
+                <canvas id="authorsChart"></canvas>
+            </div>
         </div>
         
         <div class="chart-container">
-            <div class="chart-title">⚡ Merge Speed Distribution</div>
-            <canvas id="speedChart"></canvas>
+            <div class="chart-title">Merge Speed Distribution</div>
+            <div class="chart-wrapper">
+                <canvas id="speedChart"></canvas>
+            </div>
         </div>
         
         <div class="chart-container full-width">
@@ -461,12 +518,14 @@
                 Review Activity Trends
                 <div class="chart-info-icon" onclick="toggleTooltip('review-trends', this)">i</div>
             </div>
-            <canvas id="reviewChart"></canvas>
+            <div class="chart-wrapper">
+                <canvas id="reviewChart"></canvas>
+            </div>
         </div>
     </div>
 
     <div class="data-table">
-        <h2>📋 Recent Pull Requests</h2>
+        <h2>Recent Pull Requests</h2>
         <table id="prTable">
             <thead>
                 <tr>
@@ -882,9 +941,38 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
+                            right: 20
+                        }
+                    },
                     scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                padding: 10
+                            }
+                        },
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                padding: 10
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     }
                 }
@@ -908,12 +996,29 @@
                     labels: ['Merged', 'Open', 'Closed'],
                     datasets: [{
                         data: [merged, open, closed],
-                        backgroundColor: ['#28a745', '#007bff', '#dc3545']
+                        backgroundColor: ['#28a745', '#007bff', '#dc3545'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
                     }]
                 },
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: 20
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
                 }
             });
         }
@@ -941,15 +1046,46 @@
                     datasets: [{
                         label: 'PRs Created',
                         data: sortedAuthors.map(([, count]) => count),
-                        backgroundColor: '#4CAF50'
+                        backgroundColor: '#4CAF50',
+                        borderColor: '#45a049',
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
+                            right: 20
+                        }
+                    },
                     scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                padding: 10
+                            }
+                        },
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                padding: 10
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     }
                 }
@@ -988,15 +1124,46 @@
                     datasets: [{
                         label: 'Number of PRs',
                         data: Object.values(speedCategories),
-                        backgroundColor: ['#4CAF50', '#8BC34A', '#FFC107', '#FF9800', '#F44336']
+                        backgroundColor: ['#4CAF50', '#8BC34A', '#FFC107', '#FF9800', '#F44336'],
+                        borderColor: ['#45a049', '#7CB342', '#FFB300', '#F57C00', '#E53935'],
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
+                            right: 20
+                        }
+                    },
                     scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                padding: 10
+                            }
+                        },
                         y: {
-                            beginAtZero: true
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                padding: 10
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     }
                 }
@@ -1062,13 +1229,37 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
+                            right: 20
+                        }
+                    },
                     scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                padding: 10
+                            }
+                        },
                         y: {
                             type: 'linear',
                             display: true,
                             position: 'left',
                             beginAtZero: true,
                             max: 100,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                padding: 10
+                            },
                             title: {
                                 display: true,
                                 text: 'Review Coverage %'
@@ -1079,12 +1270,27 @@
                             display: true,
                             position: 'right',
                             beginAtZero: true,
+                            ticks: {
+                                padding: 10
+                            },
                             title: {
                                 display: true,
                                 text: 'PR Volume'
                             },
                             grid: {
                                 drawOnChartArea: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
                             }
                         }
                     }
