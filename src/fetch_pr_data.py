@@ -23,7 +23,12 @@ import logging
 from pathlib import Path
 
 # Load environment variables - keeping secrets secret!
-load_dotenv()
+# Try to load from config directory first, then current directory
+config_env_path = Path(__file__).parent.parent / 'config' / '.env'
+if config_env_path.exists():
+    load_dotenv(config_env_path)
+else:
+    load_dotenv()
 
 # Set up logging - I like to know what's happening
 logging.basicConfig(

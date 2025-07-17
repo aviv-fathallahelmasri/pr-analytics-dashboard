@@ -1,0 +1,36 @@
+{
+  "timestamp": "2025-07-17T13:40:35.541266",
+  "data_summary": {
+    "total_prs": 214,
+    "data_contract_prs": 24,
+    "unique_labels": 10
+  },
+  "test_results": [
+    {
+      "test": "Label Detection",
+      "passed": true,
+      "message": "Label detection: 12/12 tests passed"
+    },
+    {
+      "test": "Filter Logic",
+      "passed": true,
+      "message": "Filter logic: 4/4 checks passed"
+    },
+    {
+      "test": "Metrics Calculation",
+      "passed": true,
+      "message": "Metrics calculation: 3/3 checks passed"
+    },
+    {
+      "test": "Edge Cases",
+      "passed": true,
+      "message": "Edge cases: 3/3 handled correctly"
+    },
+    {
+      "test": "Performance",
+      "passed": true,
+      "message": "Performance: 1.90ms per filter operation"
+    }
+  ],
+  "overall_status": "PASSED"
+}

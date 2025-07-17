@@ -1,0 +1,75 @@
+{
+  "summary": {
+    "total_prs": 214,
+    "prs_with_labels": 52,
+    "unique_labels_count": 10,
+    "data_contract_prs": 24,
+    "data_contract_percentage": 11.21
+  },
+  "data_contract_stats": {
+    "total": 24,
+    "merged": 17,
+    "open": 5,
+    "authors": 14,
+    "avg_merge_time": 381.5164705882353
+  },
+  "label_variations": {
+    "data_contract_variations": [
+      "data_contract"
+    ],
+    "all_unique_labels": [
+      "bug",
+      "data_contract",
+      "dependencies",
+      "do_not_merge",
+      "documentation",
+      "enhancement",
+      "good first issue",
+      "help wanted",
+      "outdated",
+      "python"
+    ]
+  },
+  "sample_data_contract_prs": [
+    {
+      "PR_Number": 209,
+      "Title": "Feat: fraud-1992 - add moderation log contract",
+      "Author": "gsl-mohamedsoueid",
+      "Labels": "data_contract",
+      "State": "closed",
+      "Is_Merged": true
+    },
+    {
+      "PR_Number": 205,
+      "Title": "feat: add new SF Data contracts + Add PII levels",
+      "Author": "sl-nicolasmoteley",
+      "Labels": "data_contract",
+      "State": "closed",
+      "Is_Merged": true
+    },
+    {
+      "PR_Number": 191,
+      "Title": "feat: Payment Contracts V2",
+      "Author": "aviv-augustinjuricic",
+      "Labels": "data_contract",
+      "State": "open",
+      "Is_Merged": false
+    },
+    {
+      "PR_Number": 185,
+      "Title": "feat: add primary keys on conversationmember table",
+      "Author": "li-oliviergerffroy",
+      "Labels": "data_contract",
+      "State": "closed",
+      "Is_Merged": true
+    },
+    {
+      "PR_Number": 182,
+      "Title": "Feat/adjust",
+      "Author": "aviv-nsamardzic",
+      "Labels": "data_contract",
+      "State": "closed",
+      "Is_Merged": true
+    }
+  ]
+}
