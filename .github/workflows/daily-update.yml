@@ -30,6 +30,7 @@ jobs:
     - name: Fetch PR data
       env:
         GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        GITHUB_REPO: axel-springer-kugawana/aviv_data_collection_contracts
       run: |
         python src/fetch_pr_data.py
     
