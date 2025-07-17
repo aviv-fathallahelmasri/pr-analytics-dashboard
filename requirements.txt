@@ -1,0 +1,13 @@
+# GitHub PR Analytics Dashboard - Python Dependencies
+# =====================================================
+
+# Core dependencies
+requests>=2.31.0        # For making HTTP requests
+pandas>=2.0.0          # For data manipulation and analysis
+python-dotenv>=1.0.0   # For loading environment variables
+PyGithub>=2.1.0        # For GitHub API interactions
+
+# Optional: for future enhancements
+# numpy>=1.24.0        # For numerical operations
+# matplotlib>=3.7.0    # For generating charts locally
+# seaborn>=0.12.0      # For advanced visualizations
