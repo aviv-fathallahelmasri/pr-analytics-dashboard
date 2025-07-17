@@ -1,3 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>GitHub PR Analytics Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+        
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .filter-group label {
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        select, input[type="date"], button {
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        button {
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .kpi-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .kpi-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .kpi-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+        
+        .kpi-label {
+            font-size: 1em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 22px;
+            height: 22px;
+            background: #007bff;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .info-icon:hover {
+            background: #0056b3;
+            transform: scale(1.1);
+        }
+
+        .info-icon.active {
+            background: #28a745;
+            transform: scale(1.1);
+        }
+
+        .tooltip {
+            position: fixed;
+            background: #2c3e50;
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 500px;
+            min-width: 400px;
+            z-index: 1000;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            border: 2px solid #34495e;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 25px;
+            border: 10px solid transparent;
+            border-bottom-color: #2c3e50;
+        }
+
+        .tooltip h4 {
+            margin: 0 0 20px 0;
+            color: #3498db;
+            font-size: 18px;
+            font-weight: 600;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+
+        .tooltip .section {
+            margin-bottom: 18px;
+        }
+
+        .tooltip .section-title {
+            font-weight: 700;
+            color: #ecf0f1;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .tooltip .section-content {
+            color: #bdc3c7;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .tooltip .calculation {
+            background: rgba(52, 152, 219, 0.2);
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 12px 0;
+            border-left: 4px solid #3498db;
+        }
+
+        .tooltip .benchmark {
+            color: #27ae60;
+            font-size: 13px;
+            background: rgba(39, 174, 96, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            border-left: 3px solid #27ae60;
+            margin: 12px 0;
+        }
+
+        .tooltip .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #bdc3c7;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip .close-btn:hover {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+        }
+        
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            min-height: 350px;
+        }
+        
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .chart-info-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 18px;
+            height: 18px;
+            background: #6c757d;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chart-info-icon:hover {
+            background: #495057;
+            transform: scale(1.1);
+        }
+
+        .chart-info-icon.active {
+            background: #28a745;
+            transform: scale(1.1);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        .chart-wrapper canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .doughnut-wrapper {
+            position: relative;
+            height: 280px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .doughnut-wrapper canvas {
+            max-width: 280px !important;
+            max-height: 280px !important;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .full-width .chart-wrapper {
+            height: 350px;
+        }
+        
+        .data-table {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            position: sticky;
+            top: 0;
+        }
+        
+        .status-merged { color: #28a745; font-weight: 600; }
+        .status-open { color: #007bff; font-weight: 600; }
+        .status-closed { color: #dc3545; font-weight: 600; }
+        
+        @media (max-width: 768px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                padding: 20px;
+                min-height: 300px;
+            }
+
+            .chart-wrapper {
+                height: 220px;
+            }
+
+            .doughnut-wrapper {
+                height: 220px;
+            }
+
+            .doughnut-wrapper canvas {
+                max-width: 220px !important;
+                max-height: 220px !important;
+            }
+            
+            .tooltip {
+                max-width: 350px;
+                min-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>GitHub PR Analytics Dashboard</h1>
+        <p>Advanced Pull Request Analytics & Team Impact Insights</p>
+        <p id="lastUpdate">Loading data...</p>
+    </div>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label>Date Range</label>
+            <select id="dateRange">
+                <option value="7">Last 7 Days</option>
+                <option value="30">Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+                <option value="365">Last Year</option>
+                <option value="all" selected>All Time</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label>PR Status</label>
+            <select id="prStatus">
+                <option value="all">All PRs</option>
+                <option value="merged">Merged</option>
+                <option value="open">Open</option>
+                <option value="closed">Closed</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label>Author</label>
+            <select id="prAuthor">
+                <option value="all">All Authors</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label></label>
+            <button onclick="applyFilters()">Apply Filters</button>
+        </div>
+    </div>
+
+    <div class="kpi-cards">
+        <div class="kpi-card" data-kpi="total">
+            <div class="info-icon" onclick="toggleTooltip('total', this)">i</div>
+            <div class="kpi-value" id="totalPRs">0</div>
+            <div class="kpi-label">TOTAL PRs</div>
+        </div>
+        
+        <div class="kpi-card" data-kpi="merge-rate">
+            <div class="info-icon" onclick="toggleTooltip('merge-rate', this)">i</div>
+            <div class="kpi-value" id="mergeRate">0%</div>
+            <div class="kpi-label">MERGE RATE</div>
+        </div>
+        
+        <div class="kpi-card" data-kpi="avg-merge-time">
+            <div class="info-icon" onclick="toggleTooltip('avg-merge-time', this)">i</div>
+            <div class="kpi-value" id="avgMergeTime">0h</div>
+            <div class="kpi-label">AVG MERGE TIME</div>
+        </div>
+        
+        <div class="kpi-card" data-kpi="active-authors">
+            <div class="info-icon" onclick="toggleTooltip('active-authors', this)">i</div>
+            <div class="kpi-value" id="activeAuthors">0</div>
+            <div class="kpi-label">ACTIVE AUTHORS</div>
+        </div>
+        
+        <div class="kpi-card" data-kpi="review-coverage">
+            <div class="info-icon" onclick="toggleTooltip('review-coverage', this)">i</div>
+            <div class="kpi-value" id="reviewCoverage">0%</div>
+            <div class="kpi-label">REVIEW COVERAGE</div>
+        </div>
+        
+        <div class="kpi-card" data-kpi="fast-merges">
+            <div class="info-icon" onclick="toggleTooltip('fast-merges', this)">i</div>
+            <div class="kpi-value" id="fastMerges">0%</div>
+            <div class="kpi-label">FAST MERGES (&lt;24H)</div>
+        </div>
+    </div>
+
+    <!-- Single global tooltip -->
+    <div class="tooltip" id="globalTooltip">
+        <button class="close-btn" onclick="closeTooltip()">×</button>
+        <div id="tooltipContent"></div>
+    </div>
+
+    <div class="charts-container">
+        <div class="chart-container">
+            <div class="chart-title">PR Activity Timeline</div>
+            <div class="chart-wrapper">
+                <canvas id="timelineChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-title">PR Status Distribution</div>
+            <div class="doughnut-wrapper">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-title">Top Authors</div>
+            <div class="chart-wrapper">
+                <canvas id="authorsChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <div class="chart-title">Merge Speed Distribution</div>
+            <div class="chart-wrapper">
+                <canvas id="speedChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="chart-container full-width">
+            <div class="chart-title">
+                Review Activity Trends
+                <div class="chart-info-icon" onclick="toggleTooltip('review-trends', this)">i</div>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="reviewChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="data-table">
+        <h2>Recent Pull Requests</h2>
+        <table id="prTable">
+            <thead>
+                <tr>
+                    <th>PR #</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Merge Time</th>
+                    <th>Reviews</th>
+                </tr>
+            </thead>
+            <tbody id="prTableBody">
+                <!-- Dynamic content -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let allPRs = [];
+        let filteredPRs = [];
+        let charts = {};
+        let currentTooltip = null;
+
+        // Tooltip content
+        const tooltipContent = {
+            'total': {
+                title: 'Total Pull Requests',
+                content: `
+                    <div class="section">
+                        <div class="section-title">What is measured:</div>
+                        <div class="section-content">Complete count of all pull requests submitted to our data contracts repository. Data pulled directly from the GitHub API.</div>
+                    </div>
+                    
+                    <div class="calculation">Total PRs = Open + Merged + Closed PRs</div>
+                    
+                    <div class="section">
+                        <div class="section-title">Why it's important:</div>
+                        <div class="section-content">Gives a bird's-eye view of repository activity and helps track growth patterns over time.</div>
+                    </div>
+                `
+            },
+            'merge-rate': {
+                title: 'Merge Success Rate',
+                content: `
+                    <div class="section">
+                        <div class="section-title">What is measured:</div>
+                        <div class="section-content">Percentage of PRs that successfully make it through review and get merged into main branch.</div>
+                    </div>
+                    
+                    <div class="calculation">Merge Rate = (Merged PRs / Total PRs) × 100</div>
+                    
+                    <div class="benchmark">Industry benchmark: Good >70%, Excellent >85%</div>
+                    
+                    <div class="section">
+                        <div class="section-title">Why it's important:</div>
+                        <div class="section-content">High merge rate indicates effective review process and quality contributions.</div>
+                    </div>
+                `
+            },
+            'avg-merge-time': {
+                title: 'Average Merge Time',
+                content: `
+                    <div class="section">
+                        <div class="section-title">What is measured:</div>
+                        <div class="section-content">Average time from PR creation to merge, including all review cycles and revisions.</div>
+                    </div>
+                    
+                    <div class="calculation">Average = Sum of all merge times / Number of merged PRs</div>
+                    
+                    <div class="benchmark">Targets: Fast <24h, Good <72h, Needs attention >168h</div>
+                    
+                    <div class="section">
+                        <div class="section-title">Why it's important:</div>
+                        <div class="section-content">Faster merge times mean efficient processes and unblocked development workflows.</div>
+                    </div>
+                `
+            },
+            'active-authors': {
+                title: 'Active Contributors',
+                content: `
+                    <div class="section">
+                        <div class="section-title">What is measured:</div>
+                        <div class="section-content">Number of unique developers who have submitted PRs to our data contracts repository.</div>
+                    </div>
+                    
+                    <div class="calculation">Count of unique authors from PR.author field</div>
+                    
+                    <div class="section">
+                        <div class="section-title">Why it's important:</div>
+                        <div class="section-content">More contributors indicates broader adoption and platform success across teams.</div>
+                    </div>
+                `
+            },
+            'review-coverage': {
+                title: 'Review Coverage',
+                content: `
+                    <div class="section">
+                        <div class="section-title">What is measured:</div>
+                        <div class="section-content">Percentage of PRs that received at least one code review before being merged or closed.</div>
+                    </div>
+                    
+                    <div class="calculation">Coverage = (PRs with reviews / Total PRs) × 100</div>
+                    
+                    <div class="benchmark">Target: >95% for data contracts</div>
+                    
+                    <div class="section">
+                        <div class="section-title">Why it's important:</div>
+                        <div class="section-content">High review coverage ensures quality and knowledge sharing across the team.</div>
+                    </div>
+                `
+            },
+            'fast-merges': {
+                title: 'Fast Merge Rate',
+                content: `
+                    <div class="section">
+                        <div class="section-title">What is measured:</div>
+                        <div class="section-content">Percentage of PRs merged within 24 hours of creation.</div>
+                    </div>
+                    
+                    <div class="calculation">Fast Rate = (PRs merged in <24h / Total merged PRs) × 100</div>
+                    
+                    <div class="benchmark">Targets: Good >50%, Excellent >70%</div>
+                    
+                    <div class="section">
+                        <div class="section-title">Why it's important:</div>
+                        <div class="section-content">Fast merges indicate team responsiveness and efficient processes.</div>
+                    </div>
+                `
+            },
+            'review-trends': {
+                title: 'Review Activity Trends',
+                content: `
+                    <div class="section">
+                        <div class="section-title">What is measured:</div>
+                        <div class="section-content">Shows percentage of PRs receiving reviews (purple line) and monthly PR volume (gray bars) over time.</div>
+                    </div>
+                    
+                    <div class="calculation">Monthly Review Coverage = (PRs with reviews / Total PRs per month) × 100</div>
+                    
+                    <div class="section">
+                        <div class="section-title">How to interpret:</div>
+                        <div class="section-content">High bars with stable purple line = good scaling. Declining coverage during high volume = potential capacity issues.</div>
+                    </div>
+                `
+            }
+        };
+
+        // Tooltip functionality
+        function toggleTooltip(kpiType, iconElement) {
+            const tooltip = document.getElementById('globalTooltip');
+            const content = tooltipContent[kpiType];
+            
+            document.querySelectorAll('.info-icon, .chart-info-icon').forEach(icon => {
+                icon.classList.remove('active');
+            });
+            
+            if (currentTooltip === kpiType && tooltip.classList.contains('show')) {
+                closeTooltip();
+                return;
+            }
+            
+            currentTooltip = kpiType;
+            iconElement.classList.add('active');
+            
+            if (content) {
+                document.getElementById('tooltipContent').innerHTML = content.content;
+                
+                const rect = iconElement.getBoundingClientRect();
+                let referenceRect = rect;
+                
+                if (iconElement.classList.contains('chart-info-icon')) {
+                    const chartContainer = iconElement.closest('.chart-container');
+                    referenceRect = chartContainer.getBoundingClientRect();
+                }
+                
+                let left = referenceRect.left + (referenceRect.width / 2) - 225;
+                let top = referenceRect.top - 20;
+                
+                if (left < 10) {
+                    left = 10;
+                } else if (left + 450 > window.innerWidth - 10) {
+                    left = window.innerWidth - 460;
+                }
+                
+                if (top < 10) {
+                    top = referenceRect.bottom + 10;
+                }
+                
+                tooltip.style.left = left + 'px';
+                tooltip.style.top = top + 'px';
+                tooltip.classList.add('show');
+            }
+        }
+
+        function closeTooltip() {
+            const tooltip = document.getElementById('globalTooltip');
+            tooltip.classList.remove('show');
+            currentTooltip = null;
+            
+            document.querySelectorAll('.info-icon, .chart-info-icon').forEach(icon => {
+                icon.classList.remove('active');
+            });
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.info-icon') && !e.target.closest('.chart-info-icon') && !e.target.closest('.tooltip')) {
+                closeTooltip();
+            }
+        });
+
+        // Load and process data - UPDATED PATH FOR DEPLOYMENT
+        async function loadData() {
+            try {
+                const response = await fetch('data/pr_metrics_all_prs.csv');
+                const csvText = await response.text();
+                
+                allPRs = parseCSV(csvText);
+                filteredPRs = [...allPRs];
+                
+                populateFilters();
+                updateDashboard();
+                
+                try {
+                    const updateResponse = await fetch('data/last_update.json');
+                    const updateData = await updateResponse.json();
+                    document.getElementById('lastUpdate').textContent = 
+                        `Last Updated: ${new Date(updateData.last_update_time).toLocaleString()}`;
+                } catch (e) {
+                    document.getElementById('lastUpdate').textContent = 
+                        'Last Updated: ' + new Date().toLocaleString();
+                }
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+                document.getElementById('lastUpdate').textContent = 'Error loading data - please check console';
+            }
+        }
+
+        function parseCSV(csvText) {
+            const lines = csvText.split(/\r?\n/);
+            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+            const data = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+                
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    const nextChar = line[j + 1];
+                    const prevChar = line[j - 1];
+                    
+                    if (char === '"') {
+                        if (!inQuotes && (j === 0 || prevChar === ',')) {
+                            inQuotes = true;
+                        } else if (inQuotes && (j === line.length - 1 || nextChar === ',')) {
+                            inQuotes = false;
+                        } else if (inQuotes && nextChar === '"') {
+                            current += '"';
+                            j++;
+                        } else {
+                            current += char;
+                        }
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                values.push(current.trim());
+                
+                if (values.length >= headers.length) {
+                    const record = {};
+                    headers.forEach((header, index) => {
+                        record[header] = values[index] || '';
+                    });
+                    data.push(record);
+                }
+            }
+            
+            return data;
+        }
+
+        function populateFilters() {
+            const authorSelect = document.getElementById('prAuthor');
+            const authors = [...new Set(allPRs.map(pr => pr.Author))].sort();
+            
+            authors.forEach(author => {
+                const option = document.createElement('option');
+                option.value = author;
+                option.textContent = author;
+                authorSelect.appendChild(option);
+            });
+        }
+
+        function applyFilters() {
+            const dateRange = document.getElementById('dateRange').value;
+            const prStatus = document.getElementById('prStatus').value;
+            const prAuthor = document.getElementById('prAuthor').value;
+            
+            filteredPRs = allPRs.filter(pr => {
+                // Date filter
+                if (dateRange !== 'all') {
+                    const daysAgo = parseInt(dateRange);
+                    const prDate = new Date(pr.Created_At);
+                    const cutoffDate = new Date();
+                    cutoffDate.setDate(cutoffDate.getDate() - daysAgo);
+                    
+                    if (prDate < cutoffDate) return false;
+                }
+                
+                // Status filter
+                if (prStatus !== 'all') {
+                    const prState = pr.Is_Merged === 'True' ? 'merged' : pr.State;
+                    if (prState !== prStatus) return false;
+                }
+                
+                // Author filter
+                if (prAuthor !== 'all') {
+                    if (pr.Author !== prAuthor) return false;
+                }
+                
+                return true;
+            });
+            
+            updateDashboard();
+        }
+
+        function updateDashboard() {
+            updateKPIs();
+            updateCharts();
+            updateTable();
+        }
+
+        function updateKPIs() {
+            const totalPRs = filteredPRs.length;
+            const mergedPRs = filteredPRs.filter(pr => pr.Is_Merged === 'True');
+            const openPRs = filteredPRs.filter(pr => pr.State === 'open');
+            const reviewedPRs = filteredPRs.filter(pr => parseInt(pr.Total_Reviews) > 0);
+            
+            // Calculate metrics
+            const mergeRate = totalPRs > 0 ? (mergedPRs.length / totalPRs * 100).toFixed(1) : 0;
+            const activeAuthors = new Set(filteredPRs.map(pr => pr.Author)).size;
+            const reviewCoverage = totalPRs > 0 ? (reviewedPRs.length / totalPRs * 100).toFixed(1) : 0;
+            
+            // Calculate average merge time
+            const mergedWithTime = mergedPRs.filter(pr => pr.Time_To_Merge_Hours && pr.Time_To_Merge_Hours !== '');
+            const avgMergeTime = mergedWithTime.length > 0 
+                ? (mergedWithTime.reduce((sum, pr) => sum + parseFloat(pr.Time_To_Merge_Hours), 0) / mergedWithTime.length).toFixed(1)
+                : 0;
+            
+            // Calculate fast merges
+            const fastMerges = mergedWithTime.filter(pr => parseFloat(pr.Time_To_Merge_Hours) < 24);
+            const fastMergeRate = mergedWithTime.length > 0 ? (fastMerges.length / mergedWithTime.length * 100).toFixed(1) : 0;
+            
+            // Update display
+            document.getElementById('totalPRs').textContent = totalPRs;
+            document.getElementById('mergeRate').textContent = mergeRate + '%';
+            document.getElementById('avgMergeTime').textContent = avgMergeTime + 'h';
+            document.getElementById('activeAuthors').textContent = activeAuthors;
+            document.getElementById('reviewCoverage').textContent = reviewCoverage + '%';
+            document.getElementById('fastMerges').textContent = fastMergeRate + '%';
+        }
+
+        function updateCharts() {
+            updateTimelineChart();
+            updateStatusChart();
+            updateAuthorsChart();
+            updateSpeedChart();
+            updateReviewChart();
+        }
+
+        function updateTimelineChart() {
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+            
+            if (charts.timeline) {
+                charts.timeline.destroy();
+            }
+            
+            // Group PRs by month
+            const monthlyData = {};
+            filteredPRs.forEach(pr => {
+                const date = new Date(pr.Created_At);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                monthlyData[monthKey] = (monthlyData[monthKey] || 0) + 1;
+            });
+            
+            const sortedMonths = Object.keys(monthlyData).sort();
+            const values = sortedMonths.map(month => monthlyData[month]);
+            
+            charts.timeline = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedMonths.map(month => {
+                        const [year, mon] = month.split('-');
+                        return new Date(year, mon - 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                    }),
+                    datasets: [{
+                        label: 'PRs Created',
+                        data: values,
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
+                            right: 20
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                padding: 10
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                padding: 10
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateStatusChart() {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            
+            if (charts.status) {
+                charts.status.destroy();
+            }
+            
+            const merged = filteredPRs.filter(pr => pr.Is_Merged === 'True').length;
+            const open = filteredPRs.filter(pr => pr.State === 'open').length;
+            const closed = filteredPRs.filter(pr => pr.State === 'closed' && pr.Is_Merged === 'False').length;
+            
+            charts.status = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Merged', 'Open', 'Closed'],
+                    datasets: [{
+                        data: [merged, open, closed],
+                        backgroundColor: ['#28a745', '#007bff', '#dc3545'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: 20
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateAuthorsChart() {
+            const ctx = document.getElementById('authorsChart').getContext('2d');
+            
+            if (charts.authors) {
+                charts.authors.destroy();
+            }
+            
+            const authorCounts = {};
+            filteredPRs.forEach(pr => {
+                authorCounts[pr.Author] = (authorCounts[pr.Author] || 0) + 1;
+            });
+            
+            const sortedAuthors = Object.entries(authorCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            charts.authors = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedAuthors.map(([author]) => author),
+                    datasets: [{
+                        label: 'PRs Created',
+                        data: sortedAuthors.map(([, count]) => count),
+                        backgroundColor: '#4CAF50',
+                        borderColor: '#45a049',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
+                            right: 20
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                padding: 10
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                padding: 10
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateSpeedChart() {
+            const ctx = document.getElementById('speedChart').getContext('2d');
+            
+            if (charts.speed) {
+                charts.speed.destroy();
+            }
+            
+            const mergedPRs = filteredPRs.filter(pr => pr.Is_Merged === 'True' && pr.Time_To_Merge_Hours);
+            const speedCategories = {
+                'Very Fast (< 1h)': 0,
+                'Fast (1-24h)': 0,
+                'Medium (1-7d)': 0,
+                'Slow (1-4w)': 0,
+                'Very Slow (> 4w)': 0
+            };
+            
+            mergedPRs.forEach(pr => {
+                const hours = parseFloat(pr.Time_To_Merge_Hours);
+                if (hours < 1) speedCategories['Very Fast (< 1h)']++;
+                else if (hours < 24) speedCategories['Fast (1-24h)']++;
+                else if (hours < 168) speedCategories['Medium (1-7d)']++;
+                else if (hours < 672) speedCategories['Slow (1-4w)']++;
+                else speedCategories['Very Slow (> 4w)']++;
+            });
+            
+            charts.speed = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(speedCategories),
+                    datasets: [{
+                        label: 'Number of PRs',
+                        data: Object.values(speedCategories),
+                        backgroundColor: ['#4CAF50', '#8BC34A', '#FFC107', '#FF9800', '#F44336'],
+                        borderColor: ['#45a049', '#7CB342', '#FFB300', '#F57C00', '#E53935'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
+                            right: 20
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                padding: 10
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                padding: 10
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateReviewChart() {
+            const ctx = document.getElementById('reviewChart').getContext('2d');
+            
+            if (charts.review) {
+                charts.review.destroy();
+            }
+            
+            // Calculate review coverage AND PR volume by month
+            const monthlyData = {};
+            filteredPRs.forEach(pr => {
+                const date = new Date(pr.Created_At);
+                const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = { total: 0, reviewed: 0 };
+                }
+                
+                monthlyData[monthKey].total++;
+                if (parseInt(pr.Total_Reviews) > 0) {
+                    monthlyData[monthKey].reviewed++;
+                }
+            });
+            
+            const sortedMonths = Object.keys(monthlyData).sort();
+            const coverageData = sortedMonths.map(month => {
+                const data = monthlyData[month];
+                return data.total > 0 ? (data.reviewed / data.total * 100) : 0;
+            });
+            
+            const volumeData = sortedMonths.map(month => monthlyData[month].total);
+            
+            charts.review = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedMonths.map(month => {
+                        const [year, mon] = month.split('-');
+                        return new Date(year, mon - 1).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                    }),
+                    datasets: [{
+                        label: 'Review Coverage %',
+                        data: coverageData,
+                        borderColor: '#9C27B0',
+                        backgroundColor: 'rgba(156, 39, 176, 0.1)',
+                        fill: false,
+                        tension: 0.4,
+                        yAxisID: 'y'
+                    }, {
+                        label: 'PR Volume',
+                        data: volumeData,
+                        type: 'bar',
+                        backgroundColor: 'rgba(128, 128, 128, 0.3)',
+                        borderColor: 'rgba(128, 128, 128, 0.5)',
+                        borderWidth: 1,
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    layout: {
+                        padding: {
+                            top: 20,
+                            bottom: 20,
+                            left: 20,
+                            right: 20
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                padding: 10
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
+                            },
+                            ticks: {
+                                padding: 10
+                            },
+                            title: {
+                                display: true,
+                                text: 'Review Coverage %'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            beginAtZero: true,
+                            ticks: {
+                                padding: 10
+                            },
+                            title: {
+                                display: true,
+                                text: 'PR Volume'
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateTable() {
+            const tbody = document.getElementById('prTableBody');
+            tbody.innerHTML = '';
+            
+            const recentPRs = filteredPRs
+                .sort((a, b) => new Date(b.Created_At) - new Date(a.Created_At))
+                .slice(0, 20);
+            
+            recentPRs.forEach(pr => {
                 const row = document.createElement('tr');
                 
                 const status = pr.Is_Merged === 'True' ? 'merged' : pr.State;
@@ -11,26 +1320,11 @@
                 const createdDate = new Date(pr.Created_At).toLocaleDateString();
                 const reviews = pr.Total_Reviews || '0';
                 
-                // Format labels with data contract highlight
-                let labelsHtml = '-';
-                if (pr.Labels) {
-                    const labels = pr.Labels.split(',').map(label => label.trim());
-                    labelsHtml = labels.map(label => {
-                        if (label.toLowerCase().includes('data contract') || 
-                            label.toLowerCase().includes('data_contract') ||
-                            label.toLowerCase().includes('data-contract')) {
-                            return `<span class="label-badge">${label}</span>`;
-                        }
-                        return label;
-                    }).join(', ');
-                }
-                
                 row.innerHTML = `
                     <td>#${pr.PR_Number}</td>
                     <td title="${pr.Title}">${pr.Title.length > 50 ? pr.Title.substring(0, 47) + '...' : pr.Title}</td>
                     <td>${pr.Author}</td>
                     <td class="${statusClass}">${statusText}</td>
-                    <td>${labelsHtml}</td>
                     <td>${createdDate}</td>
                     <td>${mergeTime}</td>
                     <td>${reviews}</td>
