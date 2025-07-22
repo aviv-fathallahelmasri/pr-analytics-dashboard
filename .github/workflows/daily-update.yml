@@ -16,7 +16,6 @@ jobs:
       with:
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         ref: main
-        persist-credentials: false  # We'll handle auth ourselves
     
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -36,20 +35,15 @@ jobs:
         python src/fetch_pr_data.py
     
     - name: Commit data updates
-      env:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # Set up authentication
-        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
         
         # Check if there are changes to commit
         if [[ -n $(git status --porcelain) ]]; then
           git add data/
           git commit -m "Automated update: PR analytics data [skip ci]"
-          git push origin main
+          git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git main
           echo "Data updates committed successfully"
         else
           echo "No changes to commit"
@@ -61,7 +55,6 @@ jobs:
         ref: gh-pages
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         path: gh-pages
-        persist-credentials: false
     
     - name: Update dashboard files
       run: |
@@ -89,21 +82,16 @@ jobs:
         fi
     
     - name: Deploy to GitHub Pages
-      env:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       working-directory: gh-pages
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Set up authentication for gh-pages
-        git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git
-        
         # Check if there are changes to commit
         if [[ -n $(git status --porcelain) ]]; then
           git add .
           git commit -m "Automated deployment: Update dashboard [skip ci]"
-          git push origin gh-pages
+          git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git gh-pages
           echo "Dashboard deployed successfully"
         else
           echo "No changes to deploy"
