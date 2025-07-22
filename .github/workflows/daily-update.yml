@@ -9,12 +9,16 @@ on:
 jobs:
   update-analytics:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
     
     steps:
     - name: Checkout main branch
       uses: actions/checkout@v4
       with:
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
         ref: main
     
     - name: Set up Python
@@ -29,7 +33,7 @@ jobs:
     
     - name: Fetch PR data
       env:
-        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
         GITHUB_REPO: axel-springer-kugawana/aviv_data_collection_contracts
       run: |
         python src/fetch_pr_data.py
@@ -40,62 +44,48 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
         # Check if there are changes to commit
-        if [[ -n $(git status --porcelain) ]]; then
+        if [[ -n $(git status --porcelain data/) ]]; then
           git add data/
           git commit -m "Automated update: PR analytics data [skip ci]"
-          git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git main
+          git push
           echo "Data updates committed successfully"
         else
           echo "No changes to commit"
         fi
     
-    - name: Checkout gh-pages branch
-      uses: actions/checkout@v4
-      with:
-        ref: gh-pages
-        token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        path: gh-pages
-    
-    - name: Update dashboard files
+    - name: Prepare deployment files
       run: |
-        # Create data directory if it doesn't exist
-        mkdir -p gh-pages/data
+        # Create deployment directory structure
+        mkdir -p deployment/data
         
-        # Copy updated data to gh-pages
-        cp data/pr_metrics_all_prs.csv gh-pages/data/
-        cp data/last_update.json gh-pages/data/
+        # Copy data files
+        cp data/pr_metrics_all_prs.csv deployment/data/
+        cp data/last_update.json deployment/data/
         
         # Copy additional data files if they exist
-        if [ -f data/data_contract_filter_test_report.json ]; then
-          cp data/data_contract_filter_test_report.json gh-pages/data/
-        fi
+        for file in data/data_contract_filter_test_report.json data/data_contract_label_analysis.json; do
+          if [ -f "$file" ]; then
+            cp "$file" deployment/data/
+          fi
+        done
         
-        if [ -f data/data_contract_label_analysis.json ]; then
-          cp data/data_contract_label_analysis.json gh-pages/data/
-        fi
-        
-        # Copy dashboard files if they exist in main branch
+        # Copy dashboard HTML
         if [ -f index.html ]; then
-          cp index.html gh-pages/
+          cp index.html deployment/
         elif [ -f deployment/index.html ]; then
-          cp deployment/index.html gh-pages/
+          echo "Dashboard already in deployment folder"
+        else
+          echo "Warning: No dashboard HTML found"
         fi
     
     - name: Deploy to GitHub Pages
-      working-directory: gh-pages
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # Check if there are changes to commit
-        if [[ -n $(git status --porcelain) ]]; then
-          git add .
-          git commit -m "Automated deployment: Update dashboard [skip ci]"
-          git push https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/${{ github.repository }}.git gh-pages
-          echo "Dashboard deployed successfully"
-        else
-          echo "No changes to deploy"
-        fi
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN || github.token }}
+        publish_dir: ./deployment
+        keep_files: false
+        force_orphan: true
+        commit_message: "Automated deployment: Update dashboard [skip ci]"
     
     - name: Verify deployment
       run: |
