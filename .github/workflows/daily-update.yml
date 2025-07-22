@@ -16,6 +16,7 @@ jobs:
       with:
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         ref: main
+        persist-credentials: true
     
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -36,8 +37,11 @@ jobs:
     
     - name: Commit data updates
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # Configure git to use the token for authentication
+        git config --global url."https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/".insteadOf "https://github.com/"
         
         # Check if there are changes to commit
         if [[ -n $(git status --porcelain) ]]; then
@@ -55,26 +59,41 @@ jobs:
         ref: gh-pages
         token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         path: gh-pages
+        persist-credentials: true
     
     - name: Update dashboard files
       run: |
+        # Create data directory if it doesn't exist
+        mkdir -p gh-pages/data
+        
         # Copy updated data to gh-pages
         cp data/pr_metrics_all_prs.csv gh-pages/data/
         cp data/last_update.json gh-pages/data/
         
-        # Copy dashboard files if they exist in main
-        if [ -f deployment/index.html ]; then
-          cp deployment/index.html gh-pages/
+        # Copy additional data files if they exist
+        if [ -f data/data_contract_filter_test_report.json ]; then
+          cp data/data_contract_filter_test_report.json gh-pages/data/
         fi
         
-        # Create data directory if it doesn't exist
-        mkdir -p gh-pages/data
+        if [ -f data/data_contract_label_analysis.json ]; then
+          cp data/data_contract_label_analysis.json gh-pages/data/
+        fi
+        
+        # Copy dashboard files if they exist in main branch
+        if [ -f index.html ]; then
+          cp index.html gh-pages/
+        elif [ -f deployment/index.html ]; then
+          cp deployment/index.html gh-pages/
+        fi
     
     - name: Deploy to GitHub Pages
       working-directory: gh-pages
       run: |
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # Configure git to use the token for authentication
+        git config --global url."https://${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/".insteadOf "https://github.com/"
         
         # Check if there are changes to commit
         if [[ -n $(git status --porcelain) ]]; then
