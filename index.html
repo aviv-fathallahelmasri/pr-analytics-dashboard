@@ -428,6 +428,15 @@
         </div>
         
         <div class="filter-group">
+            <label>PR Type</label>
+            <select id="labelFilter">
+                <option value="all">All PRs</option>
+                <option value="data-contract">Data Contract PRs</option>
+                <option value="non-data-contract">Non-Data Contract PRs</option>
+            </select>
+        </div>
+        
+        <div class="filter-group">
             <label>Author</label>
             <select id="prAuthor">
                 <option value="all">All Authors</option>
@@ -533,6 +542,7 @@
                     <th>Title</th>
                     <th>Author</th>
                     <th>Status</th>
+                    <th>Labels</th>
                     <th>Created</th>
                     <th>Merge Time</th>
                     <th>Reviews</th>
@@ -830,6 +840,7 @@
         function applyFilters() {
             const dateRange = document.getElementById('dateRange').value;
             const prStatus = document.getElementById('prStatus').value;
+            const labelFilter = document.getElementById('labelFilter').value;
             const prAuthor = document.getElementById('prAuthor').value;
             
             filteredPRs = allPRs.filter(pr => {
@@ -847,6 +858,17 @@
                 if (prStatus !== 'all') {
                     const prState = pr.Is_Merged === 'True' ? 'merged' : pr.State;
                     if (prState !== prStatus) return false;
+                }
+                
+                // Label filter for data contract
+                if (labelFilter !== 'all') {
+                    const labels = pr.Labels ? pr.Labels.toLowerCase() : '';
+                    const hasDataContract = labels.includes('data_contract') || 
+                                          labels.includes('data contract') || 
+                                          labels.includes('data-contract');
+                    
+                    if (labelFilter === 'data-contract' && !hasDataContract) return false;
+                    if (labelFilter === 'non-data-contract' && hasDataContract) return false;
                 }
                 
                 // Author filter
@@ -1320,11 +1342,26 @@
                 const createdDate = new Date(pr.Created_At).toLocaleDateString();
                 const reviews = pr.Total_Reviews || '0';
                 
+                // Format labels with highlighting for data_contract
+                let labelsHtml = '-';
+                if (pr.Labels) {
+                    const labels = pr.Labels.split(',').map(label => label.trim());
+                    labelsHtml = labels.map(label => {
+                        if (label.toLowerCase().includes('data_contract') || 
+                            label.toLowerCase().includes('data contract') ||
+                            label.toLowerCase().includes('data-contract')) {
+                            return `<span style="background: #9C27B0; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.85em;">${label}</span>`;
+                        }
+                        return label;
+                    }).join(', ');
+                }
+                
                 row.innerHTML = `
                     <td>#${pr.PR_Number}</td>
                     <td title="${pr.Title}">${pr.Title.length > 50 ? pr.Title.substring(0, 47) + '...' : pr.Title}</td>
                     <td>${pr.Author}</td>
                     <td class="${statusClass}">${statusText}</td>
+                    <td>${labelsHtml}</td>
                     <td>${createdDate}</td>
                     <td>${mergeTime}</td>
                     <td>${reviews}</td>
