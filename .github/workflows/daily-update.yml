@@ -1,4 +1,4 @@
-﻿name: PR Analytics Auto-Update Production
+name: PR Analytics Auto-Update Production
 
 on:
   schedule:
@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pages: write
+      id-token: write
 
     steps:
     - name: Checkout repository
@@ -34,44 +36,61 @@ jobs:
         echo "Fetching PR data..."
         python src/fetch_pr_data.py
 
+    - name: Copy data to deployment folder
+      run: |
+        # Ensure deployment data directory exists
+        mkdir -p deployment/data
+        
+        # Copy all data files to deployment folder
+        cp -r data/* deployment/data/
+        
+        echo "✅ Data copied to deployment folder"
+        
+        # List files to verify
+        echo "Files in deployment/data:"
+        ls -la deployment/data/
+
     - name: Commit and push changes
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Add all data files
-        git add data/
+        # Add both data and deployment folders
+        git add data/ deployment/data/
         
         # Commit if there are changes
         if ! git diff --staged --quiet; then
-          git commit -m "Automated update: PR analytics data [skip ci]"
+          git commit -m "Automated update: PR analytics data $(date +'%Y-%m-%d %H:%M:%S')"
           git push
-          echo "âœ… Data committed to main branch"
+          echo "✅ Changes committed to main branch"
         else
-          echo "â„¹ï¸ No changes to commit"
+          echo "ℹ️ No changes to commit"
         fi
+
+  deploy-pages:
+    needs: update-analytics
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        ref: main  # Get the latest changes
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: './deployment'
 
     - name: Deploy to GitHub Pages
-      run: |
-        # Clone the deployment repository with token auth
-        git clone https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/aviv-fathallahelmasri/pr-analytics-dashboard.git deploy_repo
-        
-        # Copy updated data to deployment repo
-        cp -r data/* deploy_repo/data/
-        
-        # Commit and push to deployment repo
-        cd deploy_repo
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        
-        git add -A
-        if ! git diff --staged --quiet; then
-          git commit -m "Automated deployment: Update dashboard $(date +'%Y-%m-%d %H:%M:%S')"
-          git push
-          echo "âœ… Deployed to GitHub Pages"
-        else
-          echo "â„¹ï¸ No deployment changes"
-        fi
-
-
-
+      id: deployment
+      uses: actions/deploy-pages@v4
