@@ -15,6 +15,8 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -31,44 +33,41 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GITHUB_REPO: axel-springer-kugawana/aviv_data_collection_contracts
       run: |
-        echo "Fetching PR data..."
         python src/fetch_pr_data.py
 
-    - name: Commit and push changes
+    - name: Commit data updates
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # Add all data files
+        # Add data files
         git add data/
         
-        # Commit if there are changes
-        if ! git diff --staged --quiet; then
+        # Check if there are changes
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
           git commit -m "Automated update: PR analytics data [skip ci]"
           git push
-          echo "✅ Data committed to main branch"
-        else
-          echo "ℹ️ No changes to commit"
+          echo "✅ Data updates committed"
         fi
 
-    - name: Deploy to GitHub Pages
+    - name: Deploy to deployment repository
       run: |
-        # Clone the deployment repository with token auth
-        git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aviv-fathallahelmasri/pr-analytics-dashboard.git deploy_repo
+        # Clone the deployment repository
+        git clone https://github.com/aviv-fathallahelmasri/pr-analytics-dashboard.git deploy_temp
+        cd deploy_temp
         
-        # Copy updated data to deployment repo
-        cp -r data/* deploy_repo/data/
+        # Copy updated data files
+        cp -r ../data/* data/
         
-        # Commit and push to deployment repo
-        cd deploy_repo
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        
+        # Commit and push if there are changes
         git add -A
-        if ! git diff --staged --quiet; then
-          git commit -m "Automated deployment: Update dashboard $(date +'%Y-%m-%d %H:%M:%S')"
-          git push
-          echo "✅ Deployed to GitHub Pages"
+        if git diff --staged --quiet; then
+          echo "No changes in deployment"
         else
-          echo "ℹ️ No deployment changes"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "Automated deployment: Update dashboard $(date +'%Y-%m-%d %H:%M:%S') [skip ci]"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aviv-fathallahelmasri/pr-analytics-dashboard.git main
         fi

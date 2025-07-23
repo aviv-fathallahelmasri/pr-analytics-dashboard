@@ -1,0 +1,87 @@
+﻿name: Daily PR Analytics Update
+
+on:
+  schedule:
+    # Run at 7:00 AM UTC (8:00 AM Berlin time during standard time, 9:00 AM during daylight saving)
+    - cron: '0 7 * * *'
+  workflow_dispatch:  # Allow manual trigger for testing
+
+jobs:
+  update-analytics:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Fetch PR data
+      env:
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        GITHUB_REPO: axel-springer-kugawana/aviv_data_collection_contracts
+      run: |
+        python src/fetch_pr_data.py
+    
+    - name: Prepare files for deployment
+      run: |
+        # Create a clean deployment directory
+        rm -rf deploy_temp
+        mkdir -p deploy_temp/data
+        
+        # Copy data files
+        cp data/pr_metrics_all_prs.csv deploy_temp/data/
+        cp data/last_update.json deploy_temp/data/
+        
+        # Copy optional data files if they exist
+        [ -f data/data_contract_filter_test_report.json ] && cp data/data_contract_filter_test_report.json deploy_temp/data/
+        [ -f data/data_contract_label_analysis.json ] && cp data/data_contract_label_analysis.json deploy_temp/data/
+        
+        # Copy dashboard HTML
+        if [ -f index.html ]; then
+          cp index.html deploy_temp/
+        else
+          echo "Warning: index.html not found in root"
+        fi
+        
+        # List deployment contents for debugging
+        echo "Deployment contents:"
+        ls -la deploy_temp/
+        ls -la deploy_temp/data/
+    
+    - name: Commit data updates to main branch
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        
+        # Check if there are changes to data files
+        if [[ -n $(git status --porcelain data/) ]]; then
+          git add data/
+          git commit -m "Automated update: PR analytics data [skip ci]"
+          git push
+          echo "âœ… Data updates committed to main branch"
+        else
+          echo "â„¹ï¸ No data changes to commit"
+        fi
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./deploy_temp
+        destination_dir: ./
+        keep_files: false
+        commit_message: "Automated deployment: Update dashboard [skip ci]"
+
