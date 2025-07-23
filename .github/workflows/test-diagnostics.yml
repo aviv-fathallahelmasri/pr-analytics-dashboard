@@ -1,0 +1,66 @@
+name: Test Workflow Diagnostics
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Check environment
+      run: |
+        echo "=== Environment Check ==="
+        echo "Repository: ${{ github.repository }}"
+        echo "Runner: ${{ runner.os }}"
+        echo "GitHub Token available: ${{ secrets.GITHUB_TOKEN != '' }}"
+        
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Test Python environment
+      run: |
+        python -c "import requests, pandas, dotenv, github; print('All packages imported successfully')"
+        
+    - name: Check for GITHUB_TOKEN
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        python -c "import os; print(f'GITHUB_TOKEN length: {len(os.environ.get(\"GITHUB_TOKEN\", \"\"))}')"
+        
+    - name: Test data fetch (dry run)
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "Testing if we can access the target repository..."
+        python -c "
+import os
+from github import Github
+
+token = os.environ.get('GITHUB_TOKEN')
+if token:
+    g = Github(token)
+    try:
+        repo = g.get_repo('axel-springer-kugawana/aviv_data_collection_contracts')
+        print(f'✓ Successfully accessed repository: {repo.full_name}')
+        print(f'  Stars: {repo.stargazers_count}')
+        print(f'  Open PRs: {repo.get_pulls(state=\"open\").totalCount}')
+    except Exception as e:
+        print(f'✗ Error accessing repository: {e}')
+else:
+    print('✗ No GITHUB_TOKEN found')
+        "
