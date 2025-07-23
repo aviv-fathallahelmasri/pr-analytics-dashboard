@@ -1,4 +1,4 @@
-﻿name: Daily PR Analytics Update
+﻿name: PR Analytics Auto-Update Production
 
 on:
   schedule:
@@ -72,5 +72,6 @@ jobs:
         else
           echo "â„¹ï¸ No deployment changes"
         fi
+
 
 
