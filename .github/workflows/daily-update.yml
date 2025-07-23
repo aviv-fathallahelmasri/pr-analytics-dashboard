@@ -1,4 +1,4 @@
-name: Daily PR Analytics Update
+﻿name: Daily PR Analytics Update
 
 on:
   schedule:
@@ -28,7 +28,7 @@ jobs:
 
     - name: Fetch PR data
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         GITHUB_REPO: axel-springer-kugawana/aviv_data_collection_contracts
       run: |
         echo "Fetching PR data..."
@@ -46,9 +46,9 @@ jobs:
         if ! git diff --staged --quiet; then
           git commit -m "Automated update: PR analytics data [skip ci]"
           git push
-          echo "✅ Data committed to main branch"
+          echo "âœ… Data committed to main branch"
         else
-          echo "ℹ️ No changes to commit"
+          echo "â„¹ï¸ No changes to commit"
         fi
 
     - name: Deploy to GitHub Pages
@@ -68,7 +68,8 @@ jobs:
         if ! git diff --staged --quiet; then
           git commit -m "Automated deployment: Update dashboard $(date +'%Y-%m-%d %H:%M:%S')"
           git push
-          echo "✅ Deployed to GitHub Pages"
+          echo "âœ… Deployed to GitHub Pages"
         else
-          echo "ℹ️ No deployment changes"
+          echo "â„¹ï¸ No deployment changes"
         fi
+
