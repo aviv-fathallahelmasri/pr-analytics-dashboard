@@ -54,7 +54,7 @@ jobs:
     - name: Deploy to GitHub Pages
       run: |
         # Clone the deployment repository with token auth
-        git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/aviv-fathallahelmasri/pr-analytics-dashboard.git deploy_repo
+        git clone https://x-access-token:${{ secrets.PERSONAL_ACCESS_TOKEN }}@github.com/aviv-fathallahelmasri/pr-analytics-dashboard.git deploy_repo
         
         # Copy updated data to deployment repo
         cp -r data/* deploy_repo/data/
@@ -72,4 +72,5 @@ jobs:
         else
           echo "â„¹ï¸ No deployment changes"
         fi
+
 
