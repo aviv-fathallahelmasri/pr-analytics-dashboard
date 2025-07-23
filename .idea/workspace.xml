@@ -5,18 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b2049b5-c592-4881-a6ab-60c851ec387f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/last_update.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/last_update.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/pr_metrics_all_prs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/pr_metrics_all_prs.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/FIREBASE_DEPLOYMENT_GUIDE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/data/last_update.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/data/pr_metrics_all_prs.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/deploy_enhanced.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/deploy_to_github_pages.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/test-index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/deployment/update_github_pages.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment" beforeDir="false" afterPath="$PROJECT_DIR$/deployment" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/venv/pyvenv.cfg" beforeDir="false" afterPath="$PROJECT_DIR$/venv/pyvenv.cfg" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +121,9 @@
       <option name="presentableId" value="Default" />
       <updated>1750934118313</updated>
       <workItem from="1750934122712" duration="48265000" />
-      <workItem from="1752754601534" duration="1155000" />
+      <workItem from="1752754601534" duration="9651000" />
+      <workItem from="1753273530015" duration="3130000" />
+      <workItem from="1753279240816" duration="2530000" />
     </task>
     <servers />
   </component>
