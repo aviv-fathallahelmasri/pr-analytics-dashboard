@@ -1,0 +1,68 @@
+2025-07-24 12:07:41,315 - INFO - Time: 2025-07-24 10:07:41 UTC
+2025-07-24 12:07:41,315 - INFO - ============================================================
+2025-07-24 12:07:41,315 - INFO - ============================================================
+2025-07-24 12:07:41,315 - INFO - STEP 1: Fetching latest PR data from GitHub
+2025-07-24 12:07:41,323 - INFO - ============================================================
+2025-07-24 12:07:41,324 - INFO - Executing: "C:\Users\FElmasri\Desktop\github-pr-analytics\venv\Scripts\python.exe" "C:\Users\FElmasri\Desktop\github-pr-analytics\src\fetch_pr_data.py"
+2025-07-24 12:18:37,125 - INFO - Command succeeded
+2025-07-24 12:18:37,135 - INFO - Total PRs: 236
+2025-07-24 12:18:37,135 - INFO - Last update: 2025-07-24T10:18:36.935356+00:00
+2025-07-24 12:18:37,135 - INFO - ============================================================
+2025-07-24 12:18:37,135 - INFO - STEP 2: Preparing deployment files
+2025-07-24 12:18:37,135 - INFO - ============================================================
+2025-07-24 12:18:37,188 - INFO - ============================================================
+2025-07-24 12:18:37,188 - INFO - STEP 3: Committing data updates to main branch
+2025-07-24 12:18:37,189 - INFO - ============================================================
+2025-07-24 12:18:37,190 - INFO - Executing: git status --porcelain data/
+2025-07-24 12:18:37,425 - INFO - Command succeeded
+2025-07-24 12:18:37,427 - INFO - Changes detected in data directory
+2025-07-24 12:18:37,427 - INFO - Executing: git add data/
+2025-07-24 12:18:37,653 - INFO - Command succeeded
+2025-07-24 12:18:37,653 - INFO - Executing: git commit -m "Manual update: PR analytics data [2025-07-24 12:18:37] [skip ci]"
+2025-07-24 12:18:37,957 - INFO - Command succeeded
+2025-07-24 12:18:37,977 - INFO - Executing: git push origin main
+2025-07-24 12:18:41,006 - INFO - Command succeeded
+2025-07-24 12:18:41,017 - INFO - ============================================================
+2025-07-24 12:18:41,017 - INFO - STEP 4: Deploying to GitHub Pages
+2025-07-24 12:18:41,017 - INFO - ============================================================
+2025-07-24 12:18:41,017 - INFO - Changed to deployment directory: C:\Users\FElmasri\Desktop\github-pr-analytics\deployment
+2025-07-24 12:18:41,017 - INFO - Executing: git config user.name "aviv-fathallahelmasri"
+2025-07-24 12:18:41,184 - INFO - Command succeeded
+2025-07-24 12:18:41,184 - INFO - Executing: git config user.email "aviv.fathalla.helmasri@asideas.de"
+2025-07-24 12:18:41,377 - INFO - Command succeeded
+2025-07-24 12:18:41,377 - INFO - Executing: git rev-parse --abbrev-ref HEAD
+2025-07-24 12:18:41,598 - INFO - Command succeeded
+2025-07-24 12:18:41,606 - INFO - Current branch: main
+2025-07-24 12:18:41,607 - INFO - Executing: git add -A
+2025-07-24 12:18:41,886 - INFO - Command succeeded
+2025-07-24 12:18:41,886 - INFO - Executing: git status --porcelain
+2025-07-24 12:18:42,125 - INFO - Command succeeded
+2025-07-24 12:18:42,125 - INFO - Executing: git commit -m "Manual deployment: Update dashboard 2025-07-24 12:18:42 [skip ci]"
+2025-07-24 12:18:42,389 - INFO - Command succeeded
+2025-07-24 12:18:42,404 - INFO - Executing: git push origin main:gh-pages --force
+2025-07-24 12:18:44,558 - INFO - Command succeeded
+2025-07-24 12:18:44,566 - INFO - Returned to project root
+2025-07-24 12:18:44,566 - INFO - ============================================================
+2025-07-24 12:18:44,566 - INFO - VERIFICATION & SUMMARY
+2025-07-24 12:18:44,566 - INFO - ============================================================
+2025-07-30 10:25:08,151 - INFO - Time: 2025-07-30 08:25:08 UTC
+2025-07-30 10:25:08,151 - INFO - ============================================================
+2025-07-30 10:25:08,152 - INFO - ============================================================
+2025-07-30 10:25:08,152 - INFO - STEP 1: Fetching latest PR data from GitHub
+2025-07-30 10:25:08,152 - INFO - ============================================================
+2025-07-30 10:25:08,153 - INFO - Executing: "C:\Users\FElmasri\Desktop\github-pr-analytics\venv\Scripts\python.exe" "C:\Users\FElmasri\Desktop\github-pr-analytics\src\fetch_pr_data.py"
+2025-07-30 10:36:27,971 - INFO - Command succeeded
+2025-07-30 10:36:27,978 - INFO - Total PRs: 244
+2025-07-30 10:36:27,979 - INFO - Last update: 2025-07-30T08:36:27.689468+00:00
+2025-07-30 10:36:27,980 - INFO - ============================================================
+2025-07-30 10:36:27,981 - INFO - STEP 2: Preparing deployment files
+2025-07-30 10:36:27,982 - INFO - ============================================================
+2025-07-30 10:36:28,040 - INFO - ============================================================
+2025-07-30 10:36:28,041 - INFO - STEP 3: Committing data updates to main branch
+2025-07-30 10:36:28,042 - INFO - ============================================================
+2025-07-30 10:36:28,042 - INFO - Executing: git status --porcelain data/
+2025-07-30 10:36:28,229 - INFO - Command succeeded
+2025-07-30 10:36:28,230 - INFO - Changes detected in data directory
+2025-07-30 10:36:28,230 - INFO - Executing: git add data/
+2025-07-30 10:36:28,430 - INFO - Command succeeded
+2025-07-30 10:36:28,431 - INFO - Executing: git commit -m "Manual update: PR analytics data [2025-07-30 10:36:28] [skip ci]"
