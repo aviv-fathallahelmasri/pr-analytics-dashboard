@@ -1,4 +1,11 @@
 {
-  "last_updated": "2025-07-23T17:54:49.044242",
-  "created_by": "health_check"
+  "last_updated": "2025-08-06T10:06:41.856101",
+  "total_prs": 254,
+  "open_prs": 9,
+  "closed_prs": 245,
+  "merged_prs": 209,
+  "unique_authors": 30,
+  "repository": "axel-springer-kugawana/aviv_data_collection_contracts",
+  "fetch_complete": true,
+  "fetch_timestamp": "2025-08-06 10:06:41"
 }

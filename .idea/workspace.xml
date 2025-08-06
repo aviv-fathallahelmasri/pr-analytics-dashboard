@@ -5,8 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1b2049b5-c592-4881-a6ab-60c851ec387f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/FIX_DEPLOYMENT_SYNC.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/FORCE_UPDATE_DASHBOARD.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RUN_FORCE_UPDATE.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/comprehensive_system_review.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/fix_dashboard_date.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/force_complete_update.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/force_dashboard_update_now.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/force_gh_pages_update.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/quick_update.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/workflow_health_check.py" beforeDir="false" afterPath="$PROJECT_DIR$/workflow_health_check.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/data/metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/pr_metrics_all_prs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/pr_metrics_all_prs.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment" beforeDir="false" afterPath="$PROJECT_DIR$/deployment" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment/data/metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/deployment/data/metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/deployment/data/pr_metrics_all_prs.csv" beforeDir="false" afterPath="$PROJECT_DIR$/deployment/data/pr_metrics_all_prs.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/manual_update.log" beforeDir="false" afterPath="$PROJECT_DIR$/manual_update.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,6 +137,8 @@
       <workItem from="1752754601534" duration="9651000" />
       <workItem from="1753273530015" duration="3130000" />
       <workItem from="1753279240816" duration="8476000" />
+      <workItem from="1753337846335" duration="9191000" />
+      <workItem from="1754465705131" duration="1590000" />
     </task>
     <servers />
   </component>
