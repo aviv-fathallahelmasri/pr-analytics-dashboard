@@ -19,7 +19,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        fetch-depth: 0
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -54,24 +53,13 @@ jobs:
         ls -la deployment/data/
 
     - name: Commit and push changes
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # Pull latest changes first to avoid conflicts
-        git pull origin main --rebase
-        
-        # Add both data and deployment folders
-        git add data/ deployment/data/
-        
-        # Commit if there are changes
-        if ! git diff --staged --quiet; then
-          git commit -m "Automated update: PR analytics data $(date +'%Y-%m-%d %H:%M:%S')"
-          git push origin main
-          echo "✅ Changes committed to main branch"
-        else
-          echo "ℹ️ No changes to commit"
-        fi
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: "Automated update: PR analytics data ${{ github.run_number }}"
+        branch: main
+        file_pattern: data/* deployment/data/*
+        commit_user_name: github-actions[bot]
+        commit_user_email: github-actions[bot]@users.noreply.github.com
 
   deploy-pages:
     needs: update-analytics
@@ -88,7 +76,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: main  # Get the latest changes
-        fetch-depth: 0
 
     - name: Setup Pages
       uses: actions/configure-pages@v4
