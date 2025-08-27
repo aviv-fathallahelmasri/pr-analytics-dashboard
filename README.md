@@ -78,7 +78,7 @@ This project provides **complete automation** for PR analytics - from data colle
    python src/update_and_deploy.py --deploy
    ```
 
-## 📋 Documentation
+## Documentation
 
 ### Core Documentation
 - [Complete Setup Guide](docs/SETUP_GUIDE.md) - Detailed installation and configuration
@@ -125,7 +125,7 @@ github-pr-analytics/
 └── README.md                    # This file
 ```
 
-## 🔄 How It Works
+## How It Works
 
 ### Daily Automation Flow (8:00 AM Berlin Time)
 1. **GitHub Actions triggers** the workflow
