@@ -1,4 +1,4 @@
-# 🚀 GitHub PR Analytics Dashboard
+# GitHub PR Analytics Dashboard
 
 **End-to-end automated system for tracking and analyzing GitHub Pull Request metrics with zero manual intervention.**
 
@@ -6,18 +6,18 @@
 [![Automation](https://img.shields.io/badge/Updates-Daily%20@%208AM%20Berlin-blue)](https://github.com/aviv-fathallahelmasri/pr-analytics-dashboard/actions)
 [![PRs Analyzed](https://img.shields.io/badge/PRs%20Analyzed-214-brightgreen)](https://aviv-fathallahelmasri.github.io/pr-analytics-dashboard/)
 
-## 🎯 What This Does
+## What This Does
 
 This project provides **complete automation** for PR analytics - from data collection to live dashboard updates. Once configured, it runs daily at 8:00 AM Berlin time without any manual work needed.
 
 ### Key Features:
-- **🤖 Fully Automated**: Daily updates at 8:00 AM Berlin time
-- **📊 Comprehensive Analytics**: Merge rates, review coverage, author stats, and more
-- **📈 Interactive Dashboard**: Live visualizations with Chart.js
-- **🔄 Zero Maintenance**: Self-updating system
-- **🎨 Professional UI**: Modern, responsive design
+- **Fully Automated**: Daily updates at 8:00 AM Berlin time
+- **Comprehensive Analytics**: Merge rates, review coverage, author stats, and more
+- **Interactive Dashboard**: Live visualizations with Chart.js
+- **Zero Maintenance**: Self-updating system
+- **Professional UI**: Modern, responsive design
 
-## 🌟 Live Dashboard
+## Live Dashboard
 
 **Check it out**: https://aviv-fathallahelmasri.github.io/pr-analytics-dashboard/
 
@@ -27,7 +27,7 @@ This project provides **complete automation** for PR analytics - from data colle
 - Active Contributors: 25
 - Average Merge Time: 76.1 hours
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```
 ┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
@@ -40,7 +40,7 @@ This project provides **complete automation** for PR analytics - from data colle
    Automation            PR Data                   Updated Metrics
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Python 3.12+
@@ -81,24 +81,24 @@ This project provides **complete automation** for PR analytics - from data colle
 ## 📋 Documentation
 
 ### Core Documentation
-- [📖 Complete Setup Guide](docs/SETUP_GUIDE.md) - Detailed installation and configuration
-- [🔧 Troubleshooting Guide](docs/TROUBLESHOOTING.md) - Common issues and solutions
-- [🏛️ Architecture Details](docs/ARCHITECTURE.md) - System design and components
-- [🤝 Contributing Guidelines](docs/CONTRIBUTING.md) - How to contribute
+- [Complete Setup Guide](docs/SETUP_GUIDE.md) - Detailed installation and configuration
+- [Troubleshooting Guide](docs/TROUBLESHOOTING.md) - Common issues and solutions
+- [Architecture Details](docs/ARCHITECTURE.md) - System design and components
+- [Contributing Guidelines](docs/CONTRIBUTING.md) - How to contribute
 
 ### Technical Documentation
-- [🔄 Automation Workflow](docs/AUTOMATION_WORKFLOW.md) - How the daily automation works
-- [📊 Metrics Explained](docs/METRICS_GUIDE.md) - Understanding all analytics
-- [🎨 Dashboard Customization](docs/DASHBOARD_CUSTOMIZATION.md) - Modifying the UI
-- [🔐 Security Best Practices](docs/SECURITY.md) - Token management and security
+- [Automation Workflow](docs/AUTOMATION_WORKFLOW.md) - How the daily automation works
+- [Metrics Explained](docs/METRICS_GUIDE.md) - Understanding all analytics
+- [Dashboard Customization](docs/DASHBOARD_CUSTOMIZATION.md) - Modifying the UI
+- [Security Best Practices](docs/SECURITY.md) - Token management and security
 
 ### Development Documentation
-- [💻 Development Workflow](docs/DEVELOPMENT.md) - Local development setup
-- [🧪 Testing Guide](docs/TESTING.md) - Running and writing tests
-- [📝 Code Style Guide](docs/CODE_STYLE.md) - Coding standards and conventions
-- [🚀 Deployment Guide](docs/DEPLOYMENT.md) - Manual and automated deployment
+- [Development Workflow](docs/DEVELOPMENT.md) - Local development setup
+- [Testing Guide](docs/TESTING.md) - Running and writing tests
+- [Code Style Guide](docs/CODE_STYLE.md) - Coding standards and conventions
+- [Deployment Guide](docs/DEPLOYMENT.md) - Manual and automated deployment
 
-## 🛠️ Project Structure
+## Project Structure
 
 ```
 github-pr-analytics/
@@ -144,7 +144,7 @@ python src/update_and_deploy.py --deploy
 python src/update_and_deploy.py --force --deploy
 ```
 
-## 📊 Metrics Tracked
+## Metrics Tracked
 
 - **Total PRs**: All pull requests analyzed
 - **Merge Rate**: Percentage of PRs merged
@@ -157,7 +157,7 @@ python src/update_and_deploy.py --force --deploy
 - **Top Authors**: Most active contributors
 - **Merge Speed Distribution**: Time to merge analysis
 
-## 🔐 Security & Best Practices
+## Security & Best Practices
 
 - **Token Security**: GitHub token stored as repository secret
 - **Minimal Permissions**: Read-only access to PR data
@@ -165,7 +165,7 @@ python src/update_and_deploy.py --force --deploy
 - **Public Dashboard**: No sensitive data exposed
 - **Git Best Practices**: Conventional commits, clear history
 
-## 🤝 Contributing
+## Contributing
 
 I welcome contributions! Please see our [Contributing Guidelines](docs/CONTRIBUTING.md) for details.
 
@@ -176,7 +176,7 @@ I welcome contributions! Please see our [Contributing Guidelines](docs/CONTRIBUT
 - Bug fixes and enhancements
 - UI/UX improvements
 
-## 📈 Future Enhancements
+## Future Enhancements
 
 - [ ] Historical trend analysis
 - [ ] Team performance metrics
@@ -187,7 +187,7 @@ I welcome contributions! Please see our [Contributing Guidelines](docs/CONTRIBUT
 - [ ] Multiple repository support
 - [ ] Advanced filtering options
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 Common issues and solutions are documented in our [Troubleshooting Guide](docs/TROUBLESHOOTING.md).
 
@@ -196,18 +196,16 @@ Quick fixes:
 - **Wrong PR count?** Verify repository access and token permissions
 - **Deployment failed?** Ensure GitHub Pages is enabled
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Built with Python, GitHub Actions, and Chart.js
 - Deployed on GitHub Pages
 - Inspired by the need for better PR insights
 
 ---
-
-**Maintained with ❤️ by Aviv**
 
 *Last README Update: July 16, 2025*
